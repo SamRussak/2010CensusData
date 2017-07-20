@@ -15,15 +15,13 @@
 	<body>		
 		<div class="jumbotron text-center">
 		  <h1>2010 Census Population Data</h1>	
-		  <h2>City of Los Angeles</h2>	
-		  <h4>By Zipcode</h4>  
+		  <h2>City of Los Angeles</h2>			  
 		</div>	
-		<div id='populationChart' class="container">
-		</div>
+		<div id='populationChart' class="container"></div>
 		<hr/>
-		<div id='genderDiffChart' class="container">
-		</div>
+		<div id='genderDiffChart' class="container"></div>
 		<hr/>
+		<div id='pieChart' class="container"></div>
 		<div class="container table-responsive">			
 			<table id="table" class="display text-center" width="100%"></table>					
 		</div>	
@@ -46,6 +44,7 @@
 			            //Build table and grpahs off JSON Data
 			            makePopGraph(dataSet);
 			            makeGenderDiffGraph(dataSet);
+			            makePieChart(dataSet);
 			            makeTable(dataSet);			            
 			        },
 			        error: function () {
@@ -53,6 +52,7 @@
 				    }
 		    	});		    
 			} );
+
 			function makePopGraph(dataSet)
 			{				
 				var popGraph = document.getElementById('populationChart');
@@ -116,6 +116,47 @@
 					showlegend: false			
 				};
 				Plotly.plot(gendGraph, data, layout);
+			}
+
+			function makePieChart(dataSet)
+			{
+				var pieGraph = document.getElementById('pieChart');
+				var pie = [0, 0, 0, 0, 0];
+				for(var i = 0; i < dataSet.length; i++)
+				{
+					if(dataSet[i][6] <= 1)
+					{
+						pie[0]++;
+					}		
+					else if(dataSet[i][6] <= 2)
+					{
+						pie[1]++;
+					}	
+					else if(dataSet[i][6] <= 3)
+					{
+						pie[2]++;
+					}	
+					else if(dataSet[i][6] <= 4)
+					{
+						pie[3]++;
+					}	
+					else
+					{
+						pie[4]++;
+					}		
+				}
+				var data = [{
+				  values: pie,				  
+				  type: 'pie',
+				  labels: ['< 1', '< 2', '< 3', '< 4', '< 5'],
+				}];
+
+				var layout = {
+				  title: "Avg Household Size",
+				  type: 'category'
+				};
+
+				Plotly.newPlot(pieGraph, data, layout);
 			}
 
 			function makeTable(dataSet)
