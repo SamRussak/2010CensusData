@@ -21,6 +21,9 @@
 		<div id='populationChart' class="container">
 
 		</div>
+		<div id='genderDiffChart' class="container">
+
+		</div>
 		<div class="container table-responsive">			
 			<table id="table" class="display text-center" width="100%"></table>					
 		</div>	
@@ -42,6 +45,7 @@
 			            }
 			            //Build table and grpahs off JSON Data
 			            makePopGraph(dataSet);
+			            makeGenderDiffGraph(dataSet);
 			            makeTable(dataSet);			            
 			        },
 			        error: function () {
@@ -65,15 +69,9 @@
 					yaxis: {title: "Total Population"},      
 					xaxis: {
 						showgrid: false,						
-						title: 'Zipcodes'												           
-					},
-					margin: {                          
-						 l: 50,
-					    r: 50,
-					    b: 50,
-					    t: 50,
-					    pad: 4
-					}					
+						title: 'Zipcodes',
+						type: 'category'												           
+					}								
 				};
 				Plotly.plot( popGraph, [{
 				type: 'scatter',	
@@ -81,6 +79,45 @@
 				x: zips,
 				y: pops }], layout);
 			}
+
+			function makeGenderDiffGraph(dataSet)
+			{
+				var gendGraph = document.getElementById('genderDiffChart');
+				var men = [];
+				var women = [];
+				var zips = [];
+				for(var i = 0; i < dataSet.length; i++)
+				{
+					zips.push(dataSet[i][0]);
+					men.push(dataSet[i][3]);
+					women.push(dataSet[i][4]);
+				}
+				var trace1 = {
+				  x: zips,
+				  y: men,				 
+				  mode: 'markers',
+				  text: 'Men'			 
+				};
+				var trace2 = {
+				  x: zips,
+				  y: women,				 
+				  mode: 'markers',
+				  text: 'women'				 
+				};
+				data = [trace1, trace2];
+				var layout = {
+					title: 'Population by Gender',
+					yaxis: {title: "Population"},      
+					xaxis: {
+						showgrid: false,						
+						title: 'Zipcodes',
+						type: 'category'												           
+					},
+					showlegend: false			
+				};
+				Plotly.plot(gendGraph, data, layout);
+			}
+
 			function makeTable(dataSet)
 			{				
 		    	$('#table').DataTable({
