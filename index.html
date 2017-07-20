@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>		
+		<title>Data Story</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+		<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>		
+		
+	</head>
+	<body>		
+		<div class="jumbotron text-center">
+		  <h1>2010 Census Population Data</h1>	
+		  <h2>City of Los Angeles</h2>	
+		  <h4>By Zipcode</h4>  
+		</div>	
+		<div class="container table-responsive">			
+			<table id="table" class="display text-center" width="100%"></table>					
+		</div>	
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var dataSet = [];
+				$.ajax({url: "https://data.lacity.org/api/views/nxs9-385f/rows.json", 
+					success: function(result){      						  				            		
+			            //Loop through JSON data to build table	            		           				
+			            for(var i = 1; i < result.data.length; i++)
+			            {
+			            	var row = [];
+			            	//Start at 8 to avoid metaData from JSON file
+			            	for(var j = 8; j < result.data[i].length; j++)
+			            	{			            				            		
+	            				row.push(result.data[i][j]);			            			            	
+			            	}			    			            	
+			            	dataSet.push(row);			          
+			            }
+			            //Build table off JSON Data
+			            makeTable(dataSet);
+			        },
+			        error: function () {
+				        alert("Unable to retrieve data, please try again...");
+				    }
+		    	});		    
+			} );
+
+			function makeTable(dataSet)
+			{				
+		    	$('#table').DataTable({
+		    		data: dataSet,
+		    		columns: [
+			    		{ title: "Zipcode" },
+			            { title: "Total Population" },
+			            { title: "Median Age" },
+			            { title: "Total Males" },
+			            { title: "Total Females" },
+			            { title: "Total Households" },
+			            { title: "Average Household Size" }
+		            ]
+		    	});
+			}
+		</script>			  
+	</body>
+</html>
